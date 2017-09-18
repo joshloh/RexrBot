@@ -25,33 +25,14 @@ public class App extends ListenerAdapter
 	@Override
 	public void onMessageReceived(MessageReceivedEvent e)
 	{
-		String prefix = "@RexrBot";
-		
-		Message message = e.getMessage();
-		MessageChannel channel = e.getChannel();
-		User user = e.getAuthor();
-
 		// Do not respond to messages from other bots, including ourself
-		if (user.isBot())
+		if (e.getAuthor().isBot())
 			return;
 
-		// Parse the command & store it in an array
-		String command = message.getContent();
-		StringTokenizer st = new StringTokenizer(command);
-		int numArgs = st.countTokens();
-		String[] args = new String[numArgs];
-		
-		for (int i = 0; i < numArgs; i++)
+		Parser parser = new Parser(e);
+		if (parser.validate())
 		{
-			args[i] = st.nextToken();
+			parser.execute();
 		}
-		
-		// Check for the correct prefix
-		if (args[0].equals(prefix))
-		{
-			// do stuff
-			channel.sendMessage("Prefix correctly used.").queue();
-		}
-		// else do nothing
 	}
 }
